@@ -1,0 +1,42 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.coverprofile
+
+# Dependency directories (remove the comment below if you use modules)
+vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# IDE directories
+.idea/
+.vscode/
+*.swp
+
+# Logs
+logs/
+*.log
+
+# Fiber specific directories
+fiber.lock
+
+# Configuration files
+config.yaml
+config.json
+.env
+
+# Build directories
+build/
+bin/
+
+# macOS specific files
+.DS_Store
