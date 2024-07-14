@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"os"
 
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
@@ -22,18 +21,11 @@ func main() {
 	database.InitDB(ctx)
 	defer database.Conn.Close(ctx)
 
-	// Parse command-line flags
-	flag.Parse()
-
-	// Create Gin app
 	r := gin.Default()
 
-	// Middleware
 	r.Use(middlewares.LogMiddleware())
 
-	// Setup routes
 	routes.SetupRoutes(r)
 
-	// Listen on port 3000
 	log.Fatal().Err(r.Run())
 }
