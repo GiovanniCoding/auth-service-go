@@ -6,12 +6,10 @@ import (
 
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/middlewares"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/routes"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
-
-var port = flag.String("port", ":3000", "Port to listen on")
 
 func main() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
@@ -20,15 +18,15 @@ func main() {
 	// Parse command-line flags
 	flag.Parse()
 
-	// Create fiber app
-	app := fiber.New(fiber.Config{})
+	// Create Gin app
+	r := gin.Default()
 
 	// Middleware
-	middlewares.LogMiddleware(app)
+	r.Use(middlewares.LogMiddleware())
 
 	// Setup routes
-	routes.SetupRoutes(app)
+	routes.SetupRoutes(r)
 
 	// Listen on port 3000
-	log.Fatal().Err(app.Listen(*port))
+	log.Fatal().Err(r.Run())
 }

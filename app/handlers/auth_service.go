@@ -2,14 +2,15 @@ package handlers
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Register(c *fiber.Ctx) error {
+func Register(c *gin.Context) {
 	data := map[string]string{
 		"email":    "email",
 		"password": "password",
@@ -20,19 +21,19 @@ func Register(c *fiber.Ctx) error {
 	ctx := context.Background()
 	conn, err := pgx.Connect(ctx, "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
 	if err != nil {
-		return err
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 	defer conn.Close(ctx)
 
 	queries := database.New(conn)
 
-	user, err := queries.CreateUser(ctx, database.CreateUserParams{
+	_, err = queries.CreateUser(ctx, database.CreateUserParams{
 		Email:        data["email"],
 		PasswordHash: string(password),
 	})
 	if err != nil {
-		return err
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(user)
+	c.Status(http.StatusCreated)
 }

@@ -2,10 +2,10 @@ package routes
 
 import (
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/handlers"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 )
 
-func SetupRoutes(app *fiber.App) {
-	api := app.Group("/api/v1")
-	api.Post("/register", handlers.Register)
+func SetupRoutes(r *gin.Engine) {
+	// api := app.Group("/api/v1")
+	r.POST("/register", handlers.Register)
 }

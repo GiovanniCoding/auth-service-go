@@ -3,23 +3,24 @@ package middlewares
 import (
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )
 
-func LogMiddleware(app *fiber.App) {
-	app.Use(func(c *fiber.Ctx) error {
+func LogMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		start := time.Now()
-		err := c.Next()
+
+		// Procesa la solicitud
+		c.Next()
+
 		stop := time.Now()
 
 		log.Info().
-			Str("method", c.Method()).
-			Str("url", c.OriginalURL()).
-			Int("status", c.Response().StatusCode()).
+			Str("method", c.Request.Method).
+			Str("url", c.Request.RequestURI).
+			Int("status", c.Writer.Status()).
 			Dur("latency", stop.Sub(start)).
 			Msg("request")
-
-		return err
-	})
+	}
 }
