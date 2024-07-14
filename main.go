@@ -29,13 +29,6 @@ func main() {
 	// Setup routes
 	routes.SetupRoutes(app)
 
-	// // Create a /api/v1 endpoint
-	// v1 := app.Group("/api/v1")
-
-	// // Bind handlers
-	// v1.Get("/users", handlers.UserList)
-	// v1.Post("/users", handlers.UserCreate)
-
 	// Listen on port 3000
 	log.Fatal().Err(app.Listen(*port))
 }

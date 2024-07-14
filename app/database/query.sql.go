@@ -11,24 +11,22 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const createAuthor = `-- name: CreateAuthor :one
-INSERT INTO users (username, email, password_hash)
-VALUES ($1, $2, $3)
-RETURNING id, username, email, password_hash, created_at, updated_at, deleted_at
+const createUser = `-- name: CreateUser :one
+INSERT INTO users (email, password_hash)
+VALUES ($1, $2)
+RETURNING id, email, password_hash, created_at, updated_at, deleted_at
 `
 
-type CreateAuthorParams struct {
-	Username     string
+type CreateUserParams struct {
 	Email        string
 	PasswordHash string
 }
 
-func (q *Queries) CreateAuthor(ctx context.Context, arg CreateAuthorParams) (User, error) {
-	row := q.db.QueryRow(ctx, createAuthor, arg.Username, arg.Email, arg.PasswordHash)
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, createUser, arg.Email, arg.PasswordHash)
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.Username,
 		&i.Email,
 		&i.PasswordHash,
 		&i.CreatedAt,
@@ -39,7 +37,7 @@ func (q *Queries) CreateAuthor(ctx context.Context, arg CreateAuthorParams) (Use
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, username, email, password_hash, created_at, updated_at, deleted_at FROM users
+SELECT id, email, password_hash, created_at, updated_at, deleted_at FROM users
 WHERE id = $1 LIMIT 1
 `
 
@@ -48,7 +46,6 @@ func (q *Queries) GetUser(ctx context.Context, id pgtype.UUID) (User, error) {
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.Username,
 		&i.Email,
 		&i.PasswordHash,
 		&i.CreatedAt,
