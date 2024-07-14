@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 
+	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/middlewares"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/routes"
 	"github.com/gin-gonic/gin"
@@ -12,8 +14,13 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
+	database.InitDB(ctx)
+	defer database.Conn.Close(ctx)
 
 	// Parse command-line flags
 	flag.Parse()
