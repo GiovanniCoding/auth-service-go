@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
+	"github.com/GiovanniCoding/amazon-analysis/auth/app/middlewares"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/schemas"
 	"github.com/gin-gonic/gin"
-	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -37,7 +37,7 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
-	log.Info().
+	middlewares.Logger.Info().
 		Str("email", user.Email).
 		Msg("User created successfully")
 
