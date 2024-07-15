@@ -6,6 +6,7 @@ import (
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/middlewares"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/schemas"
+	"github.com/GiovanniCoding/amazon-analysis/auth/app/validators"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -17,8 +18,8 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
-	if len(req.Password) < 8 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "password must be at least 8 characters long"})
+	if err := validators.ValidateStruct(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Validation error: " + err.Error()})
 		return
 	}
 
