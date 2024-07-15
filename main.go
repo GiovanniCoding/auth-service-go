@@ -24,11 +24,11 @@ func main() {
 	database.InitDB(ctx)
 	defer database.Conn.Close(ctx)
 
-	r := gin.Default()
+	router := gin.Default()
 
-	r.Use(middlewares.LogMiddleware())
+	router.Use(middlewares.LogMiddleware())
 
-	routes.SetupRoutes(r)
+	routes.SetupRoutes(router)
 
-	log.Fatal().Err(r.Run())
+	log.Fatal().Err(router.Run())
 }

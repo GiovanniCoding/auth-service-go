@@ -10,18 +10,20 @@ import (
 )
 
 var Conn *pgx.Conn
-var Q *Queries
+var Query *Queries
 
 func InitDB(ctx context.Context) {
 	var err error
 	Conn, err = pgx.Connect(ctx, "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
+
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
 
 	runMigrations()
 
-	Q = New(Conn)
+	Query = New(Conn)
+
 	log.Println("Connected to the database")
 }
 
@@ -35,6 +37,7 @@ func runMigrations() {
 
 	applyCmd := exec.Command("atlas", "migrate", "apply", "--url", os.Getenv("DB_URL"))
 	applyCmd.Env = append(os.Environ(), envVars...)
+
 	if output, err := applyCmd.CombinedOutput(); err != nil {
 		log.Fatalf("Error aplicando migraciones: %s\n%s", err, output)
 	}

@@ -10,7 +10,11 @@ var validate *validator.Validate
 
 func Init() {
 	validate = validator.New()
-	validate.RegisterValidation("passwd", validatePassword)
+	err := validate.RegisterValidation("passwd", validatePassword)
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func ValidateStruct(s interface{}) error {

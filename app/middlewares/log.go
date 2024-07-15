@@ -12,24 +12,24 @@ import (
 var Logger zerolog.Logger
 
 func LogMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 		traceID := uuid.New().String()
-		c.Set("traceID", traceID)
+		ctx.Set("traceID", traceID)
 		Logger = log.With().Str("trace_id", traceID).Logger()
 
 		Logger.Info().
-			Str("url", c.Request.RequestURI).
-			Str("method", c.Request.Method).
+			Str("url", ctx.Request.RequestURI).
+			Str("method", ctx.Request.Method).
 			Msg("request")
 
 		start := time.Now()
 
-		c.Next()
+		ctx.Next()
 
 		stop := time.Now()
 
 		Logger.Info().
-			Int("status", c.Writer.Status()).
+			Int("status", ctx.Writer.Status()).
 			Dur("latency", stop.Sub(start)).
 			Msg("response")
 	}
