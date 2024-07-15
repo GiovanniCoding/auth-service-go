@@ -54,3 +54,18 @@ func (q *Queries) GetUser(ctx context.Context, id pgtype.UUID) (User, error) {
 	)
 	return i, err
 }
+
+const userEmailExist = `-- name: UserEmailExist :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE email = $1
+) AS exists
+`
+
+func (q *Queries) UserEmailExist(ctx context.Context, email string) (bool, error) {
+	row := q.db.QueryRow(ctx, userEmailExist, email)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}

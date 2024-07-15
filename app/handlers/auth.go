@@ -23,6 +23,16 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
+	isUserInDB, err := database.Q.UserEmailExist(ctx, req.Email)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to check if user exists"})
+		return
+	}
+	if isUserInDB {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "user already exists"})
+		return
+	}
+
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to hash password"})
