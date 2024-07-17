@@ -9,7 +9,6 @@ type TestStruct struct {
 }
 
 func TestValidatePassword(t *testing.T) {
-	// Inicializar el validador
 	Init()
 
 	tests := []struct {
@@ -28,10 +27,8 @@ func TestValidatePassword(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.password, func(t *testing.T) {
-			// Crear una estructura de prueba con la contraseña
 			ts := TestStruct{Password: test.password}
 
-			// Validar la estructura
 			err := ValidateStruct(ts)
 
 			if (err == nil) != test.valid {
