@@ -3,8 +3,13 @@ services:
     build:
       context: .
       target: final
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@database:5432/postgres?sslmode=disable
+      - MIGRATIONS_PATH=file://migrations
+      - SCHEMA_PATH=file://schema.sql
+      - DB_DEV_URL=docker://postgres
     ports:
-      - 3000:3000
+      - 8080:8080
     depends_on:
       - database
   database:
