@@ -3,12 +3,11 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/middlewares"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/schemas"
+	"github.com/GiovanniCoding/amazon-analysis/auth/app/services"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/validators"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // @BasePath /api/v1
@@ -26,55 +25,29 @@ import (
 // @Failure 500 {object} schemas.ErrorResponse "Internal server error"
 // @Router /register [post]
 func Register(ctx *gin.Context) {
-	var req schemas.RegisterUserRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	var request schemas.RegisterUserRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		middlewares.Logger.Error().
+			Msg("invalid request")
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "invalid request"})
 
 		return
 	}
 
-	if err := validators.ValidateStruct(&req); err != nil {
+	if err := validators.ValidateStruct(&request); err != nil {
+		middlewares.Logger.Error().
+			Msg("Validation error: " + err.Error())
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "Validation error: " + err.Error()})
 
 		return
 	}
 
-	isUserInDB, err := database.Query.UserEmailExist(ctx, req.Email)
+	response, err := services.RegisterProcess(request, ctx)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: "failed to check if user exists"})
+		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: err.Error()})
 
 		return
 	}
 
-	if isUserInDB {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "user already exists"})
-
-		return
-	}
-
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: "failed to hash password"})
-
-		return
-	}
-
-	user, err := database.Query.CreateUser(ctx, database.CreateUserParams{
-		Email:        req.Email,
-		PasswordHash: string(passwordHash),
-	})
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: "failed to create user"})
-
-		return
-	}
-
-	middlewares.Logger.Info().
-		Str("email", user.Email).
-		Msg("User created successfully")
-
-	ctx.JSON(http.StatusCreated, schemas.RegisterUserResponse{
-		ID:    user.ID,
-		Email: user.Email,
-	})
+	ctx.JSON(http.StatusCreated, response)
 }
