@@ -1,0 +1,58 @@
+definitions:
+  schemas.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  schemas.RegisterUserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  schemas.RegisterUserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Create New User
+      parameters:
+      - description: New user info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.RegisterUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: New user created
+          schema:
+            $ref: '#/definitions/schemas.RegisterUserResponse'
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+      summary: Create New User
+      tags:
+      - Auth
+swagger: "2.0"
