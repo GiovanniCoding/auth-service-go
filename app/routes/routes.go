@@ -6,6 +6,6 @@ import (
 )
 
 func SetupRoutes(r *gin.Engine) {
-	// api := app.Group("/api/v1")
-	r.POST("/register", handlers.Register)
+	api := r.Group("/api/v1")
+	api.POST("/register", handlers.Register)
 }
