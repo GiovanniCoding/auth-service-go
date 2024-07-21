@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"os"
+
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/handlers"
 	"github.com/GiovanniCoding/amazon-analysis/auth/docs"
 	"github.com/gin-gonic/gin"
@@ -10,7 +12,7 @@ import (
 
 func SetupRoutes(router *gin.Engine) {
 	docs.SwaggerInfo.Version = "0.1.0"
-	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.Host = os.Getenv("APP_HOST")
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http"}
 	docs.SwaggerInfo.Title = "Microservice Auth"

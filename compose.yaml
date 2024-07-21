@@ -9,6 +9,7 @@ services:
       - SCHEMA_PATH=file://schema.sql
       - DB_DEV_URL=docker://postgres
       - JWT_SECRET_KEY=your_secret_key
+      - APP_HOST=localhost:8080
     ports:
       - 8080:8080
     depends_on:
