@@ -19,13 +19,13 @@ import (
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param user body schemas.RegisterUserRequest true "New user info"
-// @Success 201 {object} schemas.RegisterUserResponse "New user created"
+// @Param user body schemas.RegisterRequest true "New user info"
+// @Success 201 {object} schemas.RegisterResponse "New user created"
 // @Failure 400 {object} schemas.ErrorResponse "Invalid request"
 // @Failure 500 {object} schemas.ErrorResponse "Internal server error"
 // @Router /register [post]
 func Register(ctx *gin.Context) {
-	var request schemas.RegisterUserRequest
+	var request schemas.RegisterRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		middlewares.Logger.Error().
 			Msg("invalid request")
@@ -50,4 +50,21 @@ func Register(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, response)
+}
+
+// login godoc
+// @Summary Login User
+// @Schemes
+// @Description Login User
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200 {object} schemas.LoginResponse "User logged in"
+// @Failure 400 {object} schemas.ErrorResponse "Invalid request"
+// @Failure 500 {object} schemas.ErrorResponse "Internal server error"
+// @Router /login [post]
+func Login(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Login",
+	})
 }

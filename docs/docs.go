@@ -15,6 +15,41 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/login": {
+            "post": {
+                "description": "Login User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login User",
+                "responses": {
+                    "200": {
+                        "description": "User logged in",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.LoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "Create New User",
@@ -35,7 +70,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schemas.RegisterUserRequest"
+                            "$ref": "#/definitions/schemas.RegisterRequest"
                         }
                     }
                 ],
@@ -43,7 +78,7 @@ const docTemplate = `{
                     "201": {
                         "description": "New user created",
                         "schema": {
-                            "$ref": "#/definitions/schemas.RegisterUserResponse"
+                            "$ref": "#/definitions/schemas.RegisterResponse"
                         }
                     },
                     "400": {
@@ -71,7 +106,15 @@ const docTemplate = `{
                 }
             }
         },
-        "schemas.RegisterUserRequest": {
+        "schemas.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "schemas.RegisterRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -87,7 +130,7 @@ const docTemplate = `{
                 }
             }
         },
-        "schemas.RegisterUserResponse": {
+        "schemas.RegisterResponse": {
             "type": "object",
             "properties": {
                 "email": {

@@ -27,7 +27,7 @@ func TestRegisterUserRequest(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.email+"_"+test.password, func(t *testing.T) {
-			req := RegisterUserRequest{
+			req := RegisterRequest{
 				Email:    test.email,
 				Password: test.password,
 			}

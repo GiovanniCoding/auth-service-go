@@ -18,6 +18,7 @@ func SetupRoutes(router *gin.Engine) {
 
 	api := router.Group("/api/v1")
 	api.POST("/register", handlers.Register)
+	api.POST("/login", handlers.Login)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }

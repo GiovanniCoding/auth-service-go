@@ -4,7 +4,12 @@ definitions:
       error:
         type: string
     type: object
-  schemas.RegisterUserRequest:
+  schemas.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  schemas.RegisterRequest:
     properties:
       email:
         type: string
@@ -15,7 +20,7 @@ definitions:
     - email
     - password
     type: object
-  schemas.RegisterUserResponse:
+  schemas.RegisterResponse:
     properties:
       email:
         type: string
@@ -25,6 +30,29 @@ definitions:
 info:
   contact: {}
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login User
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User logged in
+          schema:
+            $ref: '#/definitions/schemas.LoginResponse'
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/schemas.ErrorResponse'
+      summary: Login User
+      tags:
+      - Auth
   /register:
     post:
       consumes:
@@ -36,14 +64,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/schemas.RegisterUserRequest'
+          $ref: '#/definitions/schemas.RegisterRequest'
       produces:
       - application/json
       responses:
         "201":
           description: New user created
           schema:
-            $ref: '#/definitions/schemas.RegisterUserResponse'
+            $ref: '#/definitions/schemas.RegisterResponse'
         "400":
           description: Invalid request
           schema:

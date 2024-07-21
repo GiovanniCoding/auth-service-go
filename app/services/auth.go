@@ -10,8 +10,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func RegisterProcess(request schemas.RegisterUserRequest, ctx *gin.Context) (schemas.RegisterUserResponse, error) {
-	var response schemas.RegisterUserResponse
+func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas.RegisterResponse, error) {
+	var response schemas.RegisterResponse
 
 	isUserInDB, err := database.Query.UserEmailExist(ctx, request.Email)
 	if err != nil {
