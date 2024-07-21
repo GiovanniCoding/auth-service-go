@@ -29,6 +29,6 @@ type LoginResponse struct {
 }
 
 type LoginClaim struct {
-	UserID pgtype.UUID `json:"user_id"`
+	UserID pgtype.UUID `json:"userId"`
 	jwt.RegisteredClaims
 }

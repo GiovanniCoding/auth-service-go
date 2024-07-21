@@ -21,12 +21,14 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 	if err != nil {
 		middlewares.Logger.Error().
 			Msg("failed to check if user exists")
+
 		return response, errors.New("failed to check if user exists")
 	}
 
 	if isUserInDB {
 		middlewares.Logger.Error().
 			Msg("user already exists")
+
 		return response, errors.New("user already exists")
 	}
 
@@ -34,6 +36,7 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 	if err != nil {
 		middlewares.Logger.Error().
 			Msg("failed to hash password")
+
 		return response, errors.New("failed to hash password")
 	}
 
@@ -44,6 +47,7 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 	if err != nil {
 		middlewares.Logger.Error().
 			Msg("failed to create user")
+
 		return response, errors.New("failed to create user")
 	}
 
@@ -53,6 +57,7 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 
 	response.ID = user.ID
 	response.Email = user.Email
+
 	return response, nil
 }
 
@@ -63,6 +68,7 @@ func LoginProcess(request schemas.LoginRequest, ctx *gin.Context) (schemas.Login
 	if err != nil {
 		middlewares.Logger.Error().
 			Msg("User not found")
+
 		return response, errors.New("user or password incorrect")
 	}
 
@@ -70,6 +76,7 @@ func LoginProcess(request schemas.LoginRequest, ctx *gin.Context) (schemas.Login
 	if err != nil {
 		middlewares.Logger.Error().
 			Msg("Password incorrect")
+
 		return response, errors.New("user or password incorrect")
 	}
 
@@ -87,6 +94,7 @@ func LoginProcess(request schemas.LoginRequest, ctx *gin.Context) (schemas.Login
 	signedToken, err := token.SignedString(secretKey)
 	if err != nil {
 		fmt.Printf("Error signing token: %v\n", err)
+
 		return response, errors.New("failed to sign token")
 	}
 
