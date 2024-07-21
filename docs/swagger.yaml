@@ -4,6 +4,17 @@ definitions:
       error:
         type: string
     type: object
+  schemas.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
   schemas.LoginResponse:
     properties:
       token:
@@ -35,6 +46,13 @@ paths:
       consumes:
       - application/json
       description: Login User
+      parameters:
+      - description: User login info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.LoginRequest'
       produces:
       - application/json
       responses:

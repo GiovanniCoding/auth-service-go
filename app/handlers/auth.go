@@ -59,12 +59,35 @@ func Register(ctx *gin.Context) {
 // @Tags Auth
 // @Accept json
 // @Produce json
+// @Param user body schemas.LoginRequest true "User login info"
 // @Success 200 {object} schemas.LoginResponse "User logged in"
 // @Failure 400 {object} schemas.ErrorResponse "Invalid request"
 // @Failure 500 {object} schemas.ErrorResponse "Internal server error"
 // @Router /login [post]
 func Login(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "Login",
-	})
+	var request schemas.LoginRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		middlewares.Logger.Error().
+			Msg("invalid request")
+		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "invalid request"})
+
+		return
+	}
+
+	if err := validators.ValidateStruct(&request); err != nil {
+		middlewares.Logger.Error().
+			Msg("Validation error: " + err.Error())
+		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "Validation error: " + err.Error()})
+
+		return
+	}
+
+	response, err := services.LoginProcess(request, ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }

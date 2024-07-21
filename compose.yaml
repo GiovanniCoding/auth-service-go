@@ -8,6 +8,7 @@ services:
       - MIGRATIONS_PATH=file://migrations
       - SCHEMA_PATH=file://schema.sql
       - DB_DEV_URL=docker://postgres
+      - JWT_SECRET_KEY=your_secret_key
     ports:
       - 8080:8080
     depends_on:
