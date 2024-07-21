@@ -10,20 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @BasePath /api/v1
-
-// register godoc
-// @Summary Create New User
-// @Schemes
-// @Description Create New User
-// @Tags Auth
-// @Accept json
-// @Produce json
-// @Param user body schemas.RegisterRequest true "New user info"
-// @Success 201 {object} schemas.RegisterResponse "New user created"
-// @Failure 400 {object} schemas.ErrorResponse "Invalid request"
-// @Failure 500 {object} schemas.ErrorResponse "Internal server error"
-// @Router /register [post]
 func Register(ctx *gin.Context) {
 	var request schemas.RegisterRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
@@ -52,18 +38,6 @@ func Register(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
-// login godoc
-// @Summary Login User
-// @Schemes
-// @Description Login User
-// @Tags Auth
-// @Accept json
-// @Produce json
-// @Param user body schemas.LoginRequest true "User login info"
-// @Success 200 {object} schemas.LoginResponse "User logged in"
-// @Failure 400 {object} schemas.ErrorResponse "Invalid request"
-// @Failure 500 {object} schemas.ErrorResponse "Internal server error"
-// @Router /login [post]
 func Login(ctx *gin.Context) {
 	var request schemas.LoginRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {

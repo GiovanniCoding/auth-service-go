@@ -19,9 +19,3 @@ atlas migrate diff --dir "$MIGRATIONS_PATH" --to "$SCHEMA_PATH" --dev-url "$DB_D
 ```bash
 atlas migrate apply --url "$DB_URL"
 ```
-
-## Swagger
-1. Generate swagger
-```bash
-swag init
-```
