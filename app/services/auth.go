@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/middlewares"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/schemas"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -19,24 +18,15 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 
 	isUserInDB, err := database.Query.UserEmailExist(ctx, request.Email)
 	if err != nil {
-		middlewares.Logger.Error().
-			Msg("failed to check if user exists")
-
 		return response, errors.New("failed to check if user exists")
 	}
 
 	if isUserInDB {
-		middlewares.Logger.Error().
-			Msg("user already exists")
-
 		return response, errors.New("user already exists")
 	}
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	if err != nil {
-		middlewares.Logger.Error().
-			Msg("failed to hash password")
-
 		return response, errors.New("failed to hash password")
 	}
 
@@ -45,15 +35,8 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 		PasswordHash: string(passwordHash),
 	})
 	if err != nil {
-		middlewares.Logger.Error().
-			Msg("failed to create user")
-
 		return response, errors.New("failed to create user")
 	}
-
-	middlewares.Logger.Info().
-		Str("email", user.Email).
-		Msg("User created successfully")
 
 	response.ID = user.ID
 	response.Email = user.Email
@@ -66,17 +49,11 @@ func LoginProcess(request schemas.LoginRequest, ctx *gin.Context) (schemas.Login
 
 	user, err := database.Query.GetUserByEmail(ctx, request.Email)
 	if err != nil {
-		middlewares.Logger.Error().
-			Msg("User not found")
-
 		return response, errors.New("user or password incorrect")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(request.Password))
 	if err != nil {
-		middlewares.Logger.Error().
-			Msg("Password incorrect")
-
 		return response, errors.New("user or password incorrect")
 	}
 
@@ -97,10 +74,6 @@ func LoginProcess(request schemas.LoginRequest, ctx *gin.Context) (schemas.Login
 
 		return response, errors.New("failed to sign token")
 	}
-
-	middlewares.Logger.Info().
-		Str("email", user.Email).
-		Msg("User logged in")
 
 	response.Token = signedToken
 

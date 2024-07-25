@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/middlewares"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/schemas"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/services"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/validators"
@@ -13,16 +12,12 @@ import (
 func Register(ctx *gin.Context) {
 	var request schemas.RegisterRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
-		middlewares.Logger.Error().
-			Msg("invalid request")
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "invalid request"})
 
 		return
 	}
 
 	if err := validators.ValidateStruct(&request); err != nil {
-		middlewares.Logger.Error().
-			Msg("Validation error: " + err.Error())
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "Validation error: " + err.Error()})
 
 		return
@@ -41,16 +36,12 @@ func Register(ctx *gin.Context) {
 func Login(ctx *gin.Context) {
 	var request schemas.LoginRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
-		middlewares.Logger.Error().
-			Msg("invalid request")
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "invalid request"})
 
 		return
 	}
 
 	if err := validators.ValidateStruct(&request); err != nil {
-		middlewares.Logger.Error().
-			Msg("Validation error: " + err.Error())
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "Validation error: " + err.Error()})
 
 		return

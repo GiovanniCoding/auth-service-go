@@ -2,22 +2,16 @@ package main
 
 import (
 	"context"
-	"os"
+	"log"
 
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/middlewares"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/routes"
 	"github.com/GiovanniCoding/amazon-analysis/auth/app/validators"
 	"github.com/gin-gonic/gin"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 )
 
 func main() {
 	ctx := context.Background()
-
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
 	validators.Init()
 
@@ -26,9 +20,9 @@ func main() {
 
 	router := gin.Default()
 
-	router.Use(middlewares.LogMiddleware())
-
 	routes.SetupRoutes(router)
 
-	log.Fatal().Err(router.Run())
+	if err := router.Run(":8080"); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }
