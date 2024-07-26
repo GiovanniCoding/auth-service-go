@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
@@ -16,7 +17,14 @@ import (
 func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas.RegisterResponse, error) {
 	var response schemas.RegisterResponse
 
-	isUserInDB, err := database.Query.UserEmailExist(ctx, request.Email)
+	queries, ok := ctx.MustGet("queries").(*database.Queries)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not found"})
+
+		return response, errors.New("database connection not found")
+	}
+
+	isUserInDB, err := queries.UserEmailExist(ctx, request.Email)
 	if err != nil {
 		return response, errors.New("failed to check if user exists")
 	}
@@ -30,7 +38,7 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 		return response, errors.New("failed to hash password")
 	}
 
-	user, err := database.Query.CreateUser(ctx, database.CreateUserParams{
+	user, err := queries.CreateUser(ctx, database.CreateUserParams{
 		Email:        request.Email,
 		PasswordHash: string(passwordHash),
 	})
@@ -47,7 +55,14 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 func LoginProcess(request schemas.LoginRequest, ctx *gin.Context) (schemas.LoginResponse, error) {
 	var response schemas.LoginResponse
 
-	user, err := database.Query.GetUserByEmail(ctx, request.Email)
+	queries, ok := ctx.MustGet("queries").(*database.Queries)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not found"})
+
+		return response, errors.New("database connection not found")
+	}
+
+	user, err := queries.GetUserByEmail(ctx, request.Email)
 	if err != nil {
 		return response, errors.New("user or password incorrect")
 	}

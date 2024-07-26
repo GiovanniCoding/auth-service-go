@@ -21,6 +21,7 @@ linters:
     - tagliatelle
     - goconst
     - tagalign
+    - gochecknoglobals
 issues:
   # See the dedicated "issues" documentation section.
   option: value

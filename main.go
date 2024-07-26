@@ -15,10 +15,18 @@ func main() {
 
 	validators.Init()
 
-	database.InitDB(ctx)
-	defer database.Conn.Close(ctx)
+	conn := database.InitDB(ctx)
+	queries := database.New(conn)
+	defer conn.Close(ctx)
 
 	router := gin.Default()
+
+	router.Use(
+		func(c *gin.Context) {
+			c.Set("queries", queries)
+			c.Next()
+		},
+	)
 
 	routes.SetupRoutes(router)
 

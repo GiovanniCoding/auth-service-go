@@ -9,26 +9,22 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-var Conn *pgx.Conn
-var Query *Queries
-
-func InitDB(ctx context.Context) {
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		log.Fatal("DATABASE_URL no está configurado en las variables de entorno")
+func InitDB(ctx context.Context) *pgx.Conn {
+	dsn := os.Getenv("DATABASE_URL")
+	if dsn == "" {
+		log.Panic("DATABASE_URL is required")
 	}
 
-	Conn, err := pgx.Connect(ctx, dbURL)
+	conn, err := pgx.Connect(ctx, dsn)
 
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
 
 	runMigrations()
-
-	Query = New(Conn)
-
 	log.Println("Connected to the database")
+
+	return conn
 }
 
 func runMigrations() {
