@@ -32,3 +32,11 @@ type LoginClaim struct {
 	UserID pgtype.UUID `json:"userId"`
 	jwt.RegisteredClaims
 }
+
+type ValidateTokenRequest struct {
+	Token string `json:"token" validate:"required"`
+}
+
+type ValidateTokenResponse struct {
+	Valid bool `json:"valid"`
+}

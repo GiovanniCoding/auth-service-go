@@ -56,3 +56,33 @@ func Login(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, response)
 }
+
+func ValidateToken(ctx *gin.Context) {
+	var request schemas.ValidateTokenRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "invalid request"})
+
+		return
+	}
+
+	if err := validators.ValidateStruct(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "Validation error: " + err.Error()})
+
+		return
+	}
+
+	isValid, err := services.ValidateTokenProcess(request, ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	if !isValid {
+		ctx.JSON(http.StatusUnauthorized, schemas.ValidateTokenResponse{Valid: false})
+
+		return
+	}
+
+	ctx.JSON(http.StatusOK, schemas.ValidateTokenResponse{Valid: true})
+}
