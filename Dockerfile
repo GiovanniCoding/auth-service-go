@@ -74,10 +74,10 @@ COPY --from=build /bin/server /bin/
 COPY ./migrations /migrations
 
 # Expose the port that the application listens on.
-EXPOSE 3000
+EXPOSE 30001
 
 # Health check to ensure the application is running
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost:8080/api/v1/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost:30001/api/v1/health || exit 1
 
 # What the container should run when it is started.
 ENTRYPOINT [ "/bin/server" ]
