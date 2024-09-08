@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/schemas"
+	"github.com/GiovanniCoding/auth-microservice/app/database"
+	"github.com/GiovanniCoding/auth-microservice/app/schemas"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"

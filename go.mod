@@ -1,4 +1,4 @@
-module github.com/GiovanniCoding/amazon-analysis/auth
+module github.com/GiovanniCoding/auth-microservice
 
 go 1.23.1
 

@@ -3,7 +3,7 @@ package schemas
 import (
 	"testing"
 
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/validators"
+	"github.com/GiovanniCoding/auth-microservice/app/validators"
 )
 
 func TestRegisterUserRequest(t *testing.T) {

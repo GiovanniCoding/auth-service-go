@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/database"
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/routes"
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/validators"
+	"github.com/GiovanniCoding/auth-microservice/app/database"
+	"github.com/GiovanniCoding/auth-microservice/app/routes"
+	"github.com/GiovanniCoding/auth-microservice/app/validators"
 	"github.com/gin-gonic/gin"
 )
 

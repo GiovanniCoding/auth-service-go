@@ -3,9 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/schemas"
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/services"
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/validators"
+	"github.com/GiovanniCoding/auth-microservice/app/schemas"
+	"github.com/GiovanniCoding/auth-microservice/app/services"
+	"github.com/GiovanniCoding/auth-microservice/app/validators"
 	"github.com/gin-gonic/gin"
 )
 

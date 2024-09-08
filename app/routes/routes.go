@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/GiovanniCoding/amazon-analysis/auth/app/handlers"
+	"github.com/GiovanniCoding/auth-microservice/app/handlers"
 	"github.com/gin-gonic/gin"
 )
 
