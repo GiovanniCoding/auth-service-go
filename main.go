@@ -13,7 +13,7 @@ import (
 func main() {
 	ctx := context.Background()
 
-	validators.Init()
+	validator := validators.NewValidator()
 
 	conn := database.InitDB(ctx)
 	queries := database.New(conn)
@@ -24,6 +24,7 @@ func main() {
 	router.Use(
 		func(c *gin.Context) {
 			c.Set("queries", queries)
+			c.Set("validator", validator)
 			c.Next()
 		},
 	)
@@ -31,6 +32,6 @@ func main() {
 	routes.SetupRoutes(router)
 
 	if err := router.Run(":30001"); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+		log.Printf("Failed to start server: %v", err)
 	}
 }

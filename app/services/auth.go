@@ -1,13 +1,13 @@
 package services
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/GiovanniCoding/auth-microservice/app/database"
+	errs "github.com/GiovanniCoding/auth-microservice/app/errors"
 	"github.com/GiovanniCoding/auth-microservice/app/schemas"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -21,21 +21,21 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not found"})
 
-		return response, errors.New("database connection not found")
+		return response, errs.ErrDBConnection
 	}
 
 	isUserInDB, err := queries.UserEmailExist(ctx, request.Email)
 	if err != nil {
-		return response, errors.New("failed to check if user exists")
+		return response, errs.ErrDBConnection
 	}
 
 	if isUserInDB {
-		return response, errors.New("user already exists")
+		return response, errs.ErrUserAlreadyExists
 	}
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return response, errors.New("failed to hash password")
+		return response, errs.ErrInternalServerErr
 	}
 
 	user, err := queries.CreateUser(ctx, database.CreateUserParams{
@@ -43,7 +43,7 @@ func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas
 		PasswordHash: string(passwordHash),
 	})
 	if err != nil {
-		return response, errors.New("failed to create user")
+		return response, errs.ErrDBConnection
 	}
 
 	response.ID = user.ID
@@ -59,17 +59,17 @@ func LoginProcess(request schemas.LoginRequest, ctx *gin.Context) (schemas.Login
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not found"})
 
-		return response, errors.New("database connection not found")
+		return response, errs.ErrDBConnection
 	}
 
 	user, err := queries.GetUserByEmail(ctx, request.Email)
 	if err != nil {
-		return response, errors.New("user or password incorrect")
+		return response, errs.ErrUserPassInvalid
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(request.Password))
 	if err != nil {
-		return response, errors.New("user or password incorrect")
+		return response, errs.ErrUserPassInvalid
 	}
 
 	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
@@ -87,7 +87,7 @@ func LoginProcess(request schemas.LoginRequest, ctx *gin.Context) (schemas.Login
 	if err != nil {
 		fmt.Printf("Error signing token: %v\n", err)
 
-		return response, errors.New("failed to sign token")
+		return response, errs.ErrInternalServerErr
 	}
 
 	response.Token = signedToken
@@ -102,12 +102,12 @@ func ValidateTokenProcess(request schemas.ValidateTokenRequest, ctx *gin.Context
 		return secretKey, nil
 	})
 	if err != nil {
-		return false, errors.New("invalid token")
+		return false, errs.ErrInvalidToken
 	}
 
 	_, ok := token.Claims.(*schemas.LoginClaim)
 	if !ok || !token.Valid {
-		return false, errors.New("invalid token")
+		return false, errs.ErrInvalidToken
 	}
 
 	return true, nil

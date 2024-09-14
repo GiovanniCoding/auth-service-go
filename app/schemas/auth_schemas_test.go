@@ -1,13 +1,14 @@
-package schemas
+package schemas_test
 
 import (
 	"testing"
 
+	"github.com/GiovanniCoding/auth-microservice/app/schemas"
 	"github.com/GiovanniCoding/auth-microservice/app/validators"
 )
 
 func TestRegisterUserRequest(t *testing.T) {
-	validators.Init()
+	validator := validators.NewValidator()
 
 	tests := []struct {
 		email    string
@@ -26,17 +27,22 @@ func TestRegisterUserRequest(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.email+"_"+test.password, func(t *testing.T) {
-			req := RegisterRequest{
-				Email:    test.email,
-				Password: test.password,
-			}
+		t.Run(
+			test.email+"_"+test.password,
+			func(t *testing.T) {
+				req := schemas.RegisterRequest{
+					Email:    test.email,
+					Password: test.password,
+				}
 
-			err := validators.ValidateStruct(&req)
+				err := validator.ValidateStruct(&req)
 
-			if (err == nil) != test.valid {
-				t.Errorf("expected valid=%v, got valid=%v for email %s and password %s", test.valid, err == nil, test.email, test.password)
-			}
-		})
+				if (err == nil) != test.valid {
+					t.Errorf(
+						"expected valid=%v, got valid=%v for email %s and password %s", test.valid, err == nil, test.email, test.password,
+					)
+				}
+			},
+		)
 	}
 }

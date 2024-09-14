@@ -11,13 +11,28 @@ import (
 
 func Register(ctx *gin.Context) {
 	var request schemas.RegisterRequest
+
+	validatorInterface, validatorExists := ctx.Get("validator")
+	if !validatorExists {
+		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: "validator not found"})
+
+		return
+	}
+
+	validator, isValidator := validatorInterface.(*validators.Validator)
+	if !isValidator {
+		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: "invalid validator type"})
+
+		return
+	}
+
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "invalid request"})
 
 		return
 	}
 
-	if err := validators.ValidateStruct(&request); err != nil {
+	if err := validator.ValidateStruct(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "Validation error: " + err.Error()})
 
 		return
@@ -35,13 +50,28 @@ func Register(ctx *gin.Context) {
 
 func Login(ctx *gin.Context) {
 	var request schemas.LoginRequest
+
+	validatorInterface, validatorExists := ctx.Get("validator")
+	if !validatorExists {
+		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: "validator not found"})
+
+		return
+	}
+
+	validator, isValidator := validatorInterface.(*validators.Validator)
+	if !isValidator {
+		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: "invalid validator type"})
+
+		return
+	}
+
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "invalid request"})
 
 		return
 	}
 
-	if err := validators.ValidateStruct(&request); err != nil {
+	if err := validator.ValidateStruct(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "Validation error: " + err.Error()})
 
 		return
@@ -59,13 +89,28 @@ func Login(ctx *gin.Context) {
 
 func ValidateToken(ctx *gin.Context) {
 	var request schemas.ValidateTokenRequest
+
+	validatorInterface, validatorExists := ctx.Get("validator")
+	if !validatorExists {
+		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: "validator not found"})
+
+		return
+	}
+
+	validator, isValidator := validatorInterface.(*validators.Validator)
+	if !isValidator {
+		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: "invalid validator type"})
+
+		return
+	}
+
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "invalid request"})
 
 		return
 	}
 
-	if err := validators.ValidateStruct(&request); err != nil {
+	if err := validator.ValidateStruct(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, schemas.ErrorResponse{Error: "Validation error: " + err.Error()})
 
 		return

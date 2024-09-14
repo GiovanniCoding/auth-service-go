@@ -6,19 +6,25 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-var validate *validator.Validate
+type Validator struct {
+	validate *validator.Validate
+}
 
-func Init() {
-	validate = validator.New()
-	err := validate.RegisterValidation("passwd", validatePassword)
+func NewValidator() *Validator {
+	validator := &Validator{
+		validate: validator.New(),
+	}
 
+	err := validator.validate.RegisterValidation("passwd", validatePassword)
 	if err != nil {
 		panic(err)
 	}
+
+	return validator
 }
 
-func ValidateStruct(s interface{}) error {
-	return validate.Struct(s)
+func (v *Validator) ValidateStruct(s interface{}) error {
+	return v.validate.Struct(s)
 }
 
 func validatePassword(fl validator.FieldLevel) bool {

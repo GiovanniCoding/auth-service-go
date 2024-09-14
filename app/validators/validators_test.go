@@ -1,7 +1,9 @@
-package validators
+package validators_test
 
 import (
 	"testing"
+
+	"github.com/GiovanniCoding/auth-microservice/app/validators"
 )
 
 type TestStruct struct {
@@ -9,7 +11,7 @@ type TestStruct struct {
 }
 
 func TestValidatePassword(t *testing.T) {
-	Init()
+	validator := validators.NewValidator()
 
 	tests := []struct {
 		password string
@@ -29,7 +31,7 @@ func TestValidatePassword(t *testing.T) {
 		t.Run(test.password, func(t *testing.T) {
 			ts := TestStruct{Password: test.password}
 
-			err := ValidateStruct(ts)
+			err := validator.ValidateStruct(ts)
 
 			if (err == nil) != test.valid {
 				t.Errorf("expected valid=%v, got valid=%v for password %s", test.valid, err == nil, test.password)
