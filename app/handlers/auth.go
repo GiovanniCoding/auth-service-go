@@ -116,7 +116,7 @@ func ValidateToken(ctx *gin.Context) {
 		return
 	}
 
-	isValid, err := services.ValidateTokenProcess(request, ctx)
+	isValid, err := services.ValidateTokenProcess(request)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: err.Error()})
 

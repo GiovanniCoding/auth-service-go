@@ -95,12 +95,16 @@ func LoginProcess(request schemas.LoginRequest, ctx *gin.Context) (schemas.Login
 	return response, nil
 }
 
-func ValidateTokenProcess(request schemas.ValidateTokenRequest, ctx *gin.Context) (bool, error) {
+func ValidateTokenProcess(request schemas.ValidateTokenRequest) (bool, error) {
 	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
 
-	token, err := jwt.ParseWithClaims(request.Token, &schemas.LoginClaim{}, func(token *jwt.Token) (interface{}, error) {
-		return secretKey, nil
-	})
+	token, err := jwt.ParseWithClaims(
+		request.Token,
+		&schemas.LoginClaim{},
+		func(_ *jwt.Token) (interface{}, error) {
+			return secretKey, nil
+		},
+	)
 	if err != nil {
 		return false, errs.ErrInvalidToken
 	}

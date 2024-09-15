@@ -32,3 +32,5 @@ linters:
     - lll
     - forcetypeassert
     - err113
+    - revive
+    - dupl
