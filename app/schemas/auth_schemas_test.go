@@ -7,7 +7,7 @@ import (
 	"github.com/GiovanniCoding/auth-microservice/app/validators"
 )
 
-func TestRegisterUserRequest(t *testing.T) {
+func TestSignupUserRequest(t *testing.T) {
 	validator := validators.NewValidator()
 
 	tests := []struct {
@@ -30,7 +30,7 @@ func TestRegisterUserRequest(t *testing.T) {
 		t.Run(
 			test.email+"_"+test.password,
 			func(t *testing.T) {
-				req := schemas.RegisterRequest{
+				req := schemas.SignupRequest{
 					Email:    test.email,
 					Password: test.password,
 				}

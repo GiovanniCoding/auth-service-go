@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Register(ctx *gin.Context) {
-	var request schemas.RegisterRequest
+func Signup(ctx *gin.Context) {
+	var request schemas.SignupRequest
 
 	validatorInterface, validatorExists := ctx.Get("validator")
 	if !validatorExists {
@@ -38,7 +38,7 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
-	response, err := services.RegisterProcess(request, ctx)
+	response, err := services.SignupProcess(request, ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, schemas.ErrorResponse{Error: err.Error()})
 

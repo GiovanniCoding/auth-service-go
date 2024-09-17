@@ -14,8 +14,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func RegisterProcess(request schemas.RegisterRequest, ctx *gin.Context) (schemas.RegisterResponse, error) {
-	var response schemas.RegisterResponse
+func SignupProcess(request schemas.SignupRequest, ctx *gin.Context) (schemas.SignupResponse, error) {
+	var response schemas.SignupResponse
 
 	queries, ok := ctx.MustGet("queries").(*database.Queries)
 	if !ok {

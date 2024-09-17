@@ -10,8 +10,8 @@ func SetupRoutes(router *gin.Engine) {
 
 	api.GET("/health", handlers.HealthCheck)
 
+	api.POST("/signup", handlers.Signup)
 	api.POST("/login", handlers.Login)
-	api.POST("/register", handlers.Register)
 
 	api.POST("/validate-token", handlers.ValidateToken)
 }

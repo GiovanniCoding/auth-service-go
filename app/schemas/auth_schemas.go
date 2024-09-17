@@ -9,12 +9,12 @@ type ErrorResponse struct {
 	Error string `json:"error"`
 }
 
-type RegisterRequest struct {
+type SignupRequest struct {
 	Email    string `json:"email"    validate:"required,email"`
 	Password string `json:"password" validate:"required,min=8,passwd"`
 }
 
-type RegisterResponse struct {
+type SignupResponse struct {
 	ID    pgtype.UUID `json:"id"`
 	Email string      `json:"email"`
 }
